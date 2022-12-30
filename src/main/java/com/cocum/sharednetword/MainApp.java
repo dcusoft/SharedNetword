@@ -265,8 +265,13 @@ public class MainApp extends javax.swing.JFrame {
             conectado = false;
             cliente.DesConectar();
             System.out.println("CLIENTE DESCONECTADO");
-            server.apagarServer(Integer.parseInt(jTextFieldPuerto.getText()));
-            System.out.println("SERVER APAGADO");
+            if (!jRadioButtonCliente.isSelected()) {
+                //server
+                server.apagarServer(Integer.parseInt(jTextFieldPuerto.getText()));
+                System.out.println("SERVER APAGADO");
+            }
+            
+            
 
         }
     }//GEN-LAST:event_jButton1ActionPerformed
