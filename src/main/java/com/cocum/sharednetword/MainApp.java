@@ -33,7 +33,7 @@ public class MainApp extends javax.swing.JFrame {
         jButtonEnviar.setEnabled(conectado);
         jButton3.setEnabled(conectado);
         try {
-            for (InetAddress i : InetAddress.getAllByName("COCUN-PC")) {
+            for (InetAddress i : InetAddress.getAllByName(InetAddress.getLocalHost().getHostName())) {
                 if (i.isSiteLocalAddress()) {
                     jComboBox1.addItem(i.getHostAddress());
                 }
