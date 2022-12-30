@@ -96,7 +96,7 @@ public class ThreadCliente implements Runnable {
             if(!ss.isClosed()){
             ss.close();
             }
-            if(s!=null && s.isConnected()){
+            if(s!=null){
             s.close();
             }
         } catch (IOException ex) {
