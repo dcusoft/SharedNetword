@@ -6,6 +6,7 @@ package com.cocum.sharednetword;
 
 import com.cocum.sharednetword.controlador.ClienteController;
 import com.cocum.sharednetword.controlador.ServidorController;
+import com.cocum.sharednetword.dao.Mensaje;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.logging.Level;
@@ -34,9 +35,9 @@ public class MainApp extends javax.swing.JFrame {
         jButton3.setEnabled(conectado);
         try {
             for (InetAddress i : InetAddress.getAllByName(InetAddress.getLocalHost().getHostName())) {
-                if (i.isSiteLocalAddress()) {
+                
                     jComboBox1.addItem(i.getHostAddress());
-                }
+                
             }
 
             jTextFieldIp.setText(InetAddress.getLocalHost().getHostAddress());
@@ -82,6 +83,11 @@ public class MainApp extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         setMinimumSize(new java.awt.Dimension(660, 428));
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowClosing(java.awt.event.WindowEvent evt) {
+                formWindowClosing(evt);
+            }
+        });
 
         jButton1.setText("Conectar");
         jButton1.addActionListener(new java.awt.event.ActionListener() {
@@ -167,7 +173,7 @@ public class MainApp extends javax.swing.JFrame {
                                         .addGap(18, 18, 18)
                                         .addComponent(jRadioButtonServidor, javax.swing.GroupLayout.PREFERRED_SIZE, 96, javax.swing.GroupLayout.PREFERRED_SIZE)
                                         .addGap(8, 8, 8))
-                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 227, Short.MAX_VALUE))
+                                    .addComponent(jButton1, javax.swing.GroupLayout.DEFAULT_SIZE, 385, Short.MAX_VALUE))
                                 .addGap(18, 18, 18)
                                 .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 16, javax.swing.GroupLayout.PREFERRED_SIZE)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -182,7 +188,7 @@ public class MainApp extends javax.swing.JFrame {
                         .addGap(18, 18, 18)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel4, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 130, Short.MAX_VALUE)
+                            .addComponent(jLabel6, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 290, Short.MAX_VALUE)
                             .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                                     .addComponent(jButton3, javax.swing.GroupLayout.Alignment.LEADING, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
@@ -233,8 +239,8 @@ public class MainApp extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
-        System.out.println("jRadioButtonCliente" + jRadioButtonCliente.isSelected());
-        System.out.println("jRadioButtonServidor" + jRadioButtonServidor.isSelected());
+        System.out.println("jRadioButtonCliente:" + jRadioButtonCliente.isSelected());
+        System.out.println("jRadioButtonServidor:" + jRadioButtonServidor.isSelected());
 
         if (!conectado) {
             jButton1.setText("Desconectar");
@@ -263,22 +269,31 @@ public class MainApp extends javax.swing.JFrame {
             jTextFieldUsuario.setEnabled(conectado);
             jButton1.setText("Conectar");
             conectado = false;
-            cliente.DesConectar();
+            Mensaje m=new Mensaje();
+            m.setUsuario(jTextFieldUsuario.getText());
+            m.setMensaje("Se ha desconectado");
+            m.setTipoMensaje(2);
+            if(cliente!=null){
+                cliente.Send(m);
+            }
             System.out.println("CLIENTE DESCONECTADO");
             if (!jRadioButtonCliente.isSelected()) {
                 //server
-                server.apagarServer(Integer.parseInt(jTextFieldPuerto.getText()));
+                if(server!=null){
+                server.apagarServer();
                 System.out.println("SERVER APAGADO");
+                }
             }
-            
-            
-
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
     private void jButtonEnviarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButtonEnviarActionPerformed
         System.out.println("ENVIAR MENSAJE");
-        cliente.Send("\n" + jTextFieldUsuario.getText() + ": " + jTextArea2.getText(), 3);
+        Mensaje m=new Mensaje();
+        m.setUsuario(jTextFieldUsuario.getText());
+        m.setMensaje(jTextArea2.getText());
+        m.setTipoMensaje(1);
+        cliente.Send(m);
         jTextArea2.setText("");
     }//GEN-LAST:event_jButtonEnviarActionPerformed
 
@@ -295,6 +310,29 @@ public class MainApp extends javax.swing.JFrame {
             Logger.getLogger(MainApp.class.getName()).log(Level.SEVERE, null, ex);
         }
     }//GEN-LAST:event_jRadioButtonClienteActionPerformed
+
+    private void formWindowClosing(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowClosing
+        Mensaje m=new Mensaje();
+        m.setUsuario(jTextFieldUsuario.getText());
+        m.setMensaje("Se ha desconectado");
+        m.setTipoMensaje(2);
+        if(cliente!=null){
+            cliente.Send(m);
+        }
+        
+        //cliente.DesConectar();
+        
+        if (!jRadioButtonCliente.isSelected()) {
+                //server
+                if(server!=null){
+                server.apagarServer();
+                System.out.println("SERVER APAGADO");
+                }
+        }
+        System.out.println("CERRANDO VENTANA");
+        this.dispose();
+        
+    }//GEN-LAST:event_formWindowClosing
 
     /**
      * @param args the command line arguments

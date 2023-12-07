@@ -29,7 +29,6 @@ public class ClienteController {
     String host;
     ObjectInputStream ois;
     ObjectOutputStream oos;
-    ThreadCliente tc;
     MainApp ventana;
 
     public ClienteController(int puerto, String host, MainApp ventana) {
@@ -40,24 +39,25 @@ public class ClienteController {
 
     public void Conectar(String usuario) {
         try {
-            Send(usuario, 1);
-            System.out.println("puerto de cliente:" + puertoCliente);
-            tc = new ThreadCliente(puertoCliente, ventana);
-            Thread escuchaCliente = new Thread(tc);
-            escuchaCliente.start();
-            Usuario u = new Usuario();
+            s = new Socket(host, puerto);
+            Logger.getLogger(ClienteController.class.getName()).log(Level.INFO, "CLIENTE CONECTADO: "+usuario);
+            Thread atencion=new Thread(new ThreadCliente(s,ventana));
+            atencion.start();
+            Mensaje m=new Mensaje();
+            m.setUsuario(usuario);
+            m.setTipoMensaje(0);
+            Usuario u=new Usuario();
             u.setIp(InetAddress.getLocalHost().getHostAddress());
-            u.setPort(puertoCliente);
             u.setName(usuario);
-            System.out.println("Registro");
-            Send(u, 2);
+            m.setMensaje(u);
+            Send(m);
+            
         } catch (IOException ex) {
             Logger.getLogger(ClienteController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
     public void DesConectar() {
-        tc.apagarCliente();
         try {
             s.close();
         } catch (IOException ex) {
@@ -65,45 +65,19 @@ public class ClienteController {
         }
     }
 
-    public void Send(Object mensaje, int tipoMensaje) {
+    public void Send(Object mensaje) {
         try {
-            s = new Socket(host, puerto);
+            if(s!=null){
+            
             if (s.isClosed()) {
                 System.err.println("Desconectado");
             } else {
-                System.out.println("ENVIAR MENSAJE");
                 oos = new ObjectOutputStream(s.getOutputStream());
-                Mensaje data = new Mensaje();
-                data.setTipoMensaje(tipoMensaje);
-                data.setMensaje(mensaje);
-                oos.writeObject(data);
-                System.out.println("Mensaje Enviado : "+data.getMensaje());
-                switch (tipoMensaje) {
-                    case 1:
-                        ventana.getjTextArea1().setText(mensaje + ": Conectando\n");
-                        ois = new ObjectInputStream(s.getInputStream());
-                        data = (Mensaje) ois.readObject();
-                        puertoCliente = (int) data.getMensaje();
-                        ventana.getjTextArea1().append(mensaje + ": puerto asignado " + puertoCliente +"\n");
-                        ventana.getjTextArea1().append(mensaje + ": Conexion Exitosa");
-                        break;
-                    case 2:
-                        System.out.println("Resgistrando");
-                        ois = new ObjectInputStream(s.getInputStream());
-                        data = (Mensaje) ois.readObject();
-                        ventana.getjLabelEstado().setText((String) data.getMensaje());
-                        break;
-                    case 3:
-                        ois = new ObjectInputStream(s.getInputStream());
-                        data = (Mensaje) ois.readObject();
-                        ventana.getjLabelEstado().setText((String) data.getMensaje());
-                        break;
-                    default:
-                        break;
-                }
-
+                oos.writeObject(mensaje);
+                Logger.getLogger(ClienteController.class.getName()).log(Level.INFO, "Mensaje Enviado : "+((Mensaje)mensaje).toString());
             }
-        } catch (IOException | ClassNotFoundException ex) {
+            }
+        } catch (IOException ex) {
             Logger.getLogger(ClienteController.class.getName()).log(Level.SEVERE, null, ex);
         }
     }

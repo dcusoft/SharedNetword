@@ -5,67 +5,19 @@
 package com.cocum.sharednetword.dao;
 
 import java.io.Serializable;
-import java.util.List;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.ToString;
 
 /**
  *
  * @author COCUN
  */
+@Setter
+@Getter
+@ToString
 public class Mensaje implements Serializable{
-    private String usuarioDestino;
-    private String ipDestino;
-    private int puertoDestino;
+    private String usuario;
     private int tipoMensaje;
-    private Object mensaje;
-    private List<byte[]> listaArchivos;
-
-    public String getUsuarioDestino() {
-        return usuarioDestino;
-    }
-
-    public void setUsuarioDestino(String usuarioDestino) {
-        this.usuarioDestino = usuarioDestino;
-    }
-
-    public String getIpDestino() {
-        return ipDestino;
-    }
-
-    public void setIpDestino(String ipDestino) {
-        this.ipDestino = ipDestino;
-    }
-
-    public int getPuertoDestino() {
-        return puertoDestino;
-    }
-
-    public void setPuertoDestino(int puertoDestino) {
-        this.puertoDestino = puertoDestino;
-    }
-
-    public int getTipoMensaje() {
-        return tipoMensaje;
-    }
-
-    public void setTipoMensaje(int tipoMensaje) {
-        this.tipoMensaje = tipoMensaje;
-    }
-
-    public Object getMensaje() {
-        return mensaje;
-    }
-
-    public void setMensaje(Object mensaje) {
-        this.mensaje = mensaje;
-    }
-
-    public List<byte[]> getListaArchivos() {
-        return listaArchivos;
-    }
-
-    public void setListaArchivos(List<byte[]> listaArchivos) {
-        this.listaArchivos = listaArchivos;
-    }
-
-    
+    private Object mensaje;   
 }

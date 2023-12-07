@@ -1,11 +1,10 @@
+G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\ThreadAtencionCliente.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\ThreadCliente.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\controlador\ClienteController.java
-G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\AtencionService.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\ThreadServer.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\controlador\ServidorController.java
+G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\dao\MensajePrivado.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\MainApp.java
-G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\NotificarDesconectados.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\dao\Mensaje.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\dao\Usuario.java
 G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\Main.java
-G:\NetBeansProjects\SharedNetword\src\main\java\com\cocum\sharednetword\service\ActualizaConectados.java
